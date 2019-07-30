@@ -6,6 +6,13 @@ var bodyParser = require('body-parser');
 // Create app
 var app = express();
 
+// add lib and code for https
+var https = require('https');
+var privateKey  = fs.readFileSync('ssl/private.key', 'utf8');
+var certificate = fs.readFileSync('ssl/cert.pem', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+var server = https.createServer(credentials, app);
+
 /*
 Route                         HTTP Verb Description
 -------------------------------------------------------------------------------------------
@@ -110,6 +117,7 @@ app.route('/api/manifests/:manifestId')
 const PORT = process.env.PORT || 3001;
 
 // listen on port
-app.listen(PORT, function () {
+// app.listen(PORT, function () { // commented out in favour off https
+server.listen(PORT, function () {
   console.log('IIIF manifest store server is up on port ' + PORT);
 });
